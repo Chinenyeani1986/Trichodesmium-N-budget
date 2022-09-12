@@ -6,7 +6,7 @@ library(ggplot2)
 library(gridExtra)
 library(splines)
 library(gam)
-
+#cd <- readRDS("gbr4_data.rds")
 cd <- read.csv("gbr4_data.csv")
 cd <- cd[complete.cases(cd),] # remove rows that have missing values (NA) 
 all_data <- do.call(data.frame,lapply(cd, function(x) replace(x, is.infinite(x),NA)))  #replace infinite numbers with NA
@@ -36,6 +36,10 @@ p1= ggplot(fitdata, aes_string(x1, y1)) +
         panel.grid.minor = element_line(colour = '#E6E6E3'), axis.line = element_line(colour = "black"), 
         axis.text=element_text(size=12),
         panel.border = element_rect(colour='black', fill=NA)) +
+  #ylim(-0.01,0.025) +
+  #xlim(0,200) +
+  #geom_line(aes(y=visregLwr), linetype="dashed") + 
+  #geom_line(aes(y=visregUpr), linetype="dashed") +
   labs(x=expression(DIN~(mg~N~m^-3)),  y="")
 
 
@@ -71,6 +75,7 @@ p3 = ggplot(fitdata, aes_string(x1, y1)) +
         panel.grid.minor = element_line(colour = '#E6E6E3'), axis.line = element_line(colour = "black"), 
         axis.text=element_text(size=12), #axis.title=element_text(size=18,face="bold"),
         panel.border = element_rect(colour='black', fill=NA)) +
+  #ylim(-0.01,0.01) +
   labs(x='Day of year', y="", colour = "")
 
 fitdata = plotdata[[4]]$fit  #get fitted data
@@ -88,6 +93,7 @@ p4 = ggplot(fitdata, aes_string(x1, y1)) +
         axis.text=element_text(size=12),
         panel.border = element_rect(colour='black', fill=NA)) +
   xlim(30,37) +
+  #ylim(-0.01,0.01) +
   labs(x='Salinity (PSU)', y=expression(italic(Trichodesmium)~N~(mg~N~m^-3)), colour = "")
 
 
@@ -125,6 +131,8 @@ p6 = ggplot(fitdata, aes_string(x1, y1)) +
         panel.grid.minor = element_line(colour = '#E6E6E3'), axis.line = element_line(colour = "black"), 
         axis.text=element_text(size=12), #axis.title=element_text(size=18,face="bold"),
         panel.border = element_rect(colour='black', fill=NA)) +
+  #xlim(0, 500) +
+  #ylim(-0.02,0.01) +
   labs(x=expression(DIP~(mg~P~m^-3)), y="")
 
 
@@ -143,6 +151,7 @@ p7 = ggplot(fitdata, aes_string(x1, y1)) +
         panel.grid.minor = element_line(colour = '#E6E6E3'), axis.line = element_line(colour = "black"), 
         axis.text=element_text(size=12), #axis.title=element_text(size=18,face="bold"),
         panel.border = element_rect(colour='black', fill=NA)) +
+ # ylim(-0.01,0.025) +
   labs(x= expression(PAR~(mol~photon~m^-2~s^-1)), y="")
 
 
@@ -150,5 +159,6 @@ plt_data= list(p1,p2,p3,p4,p5,p6,p7)
 arg_list <- c(plt_data, list(nrow=3, ncol=3))
 do.call(grid.arrange, arg_list)
 
+summary(gam)
 
 

@@ -33,7 +33,7 @@ long = c(longitude)
 dat = data.frame(long = long, lat = lat, area, depth = depth, c_length, c_width)
 dat = dat[complete.cases(dat),]
 
-datshape <- dat[inout(dat[, 1:2], map.df, bound=TRUE), ] 
+datshape <- dat[inout(dat[, 1:2], map.df, bound=TRUE), ]  #select GBR4 geolocations that are in the GBRMP boundary
 p <- ggplot(dat, aes(x = long, y=lat)) + geom_point(colour="grey") + geom_polygon(data = map.df, fill = "black") + coord_map() + theme_bw() + 
              theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 print(p)
@@ -51,6 +51,7 @@ autumn <- mutate(autumn, volume = datshape$volume, nfix_total = nfix * volume, d
 spring <- mutate(spring, volume = datshape$volume, nfix_total = nfix * volume, depth = datshape$depth, area = datshape$area)
 nfix_MT <- data.frame(summer = summer$nfix_total, autumn = autumn$nfix_total, winter = winter$nfix_total, spring = spring$nfix_total) * 86400 / 1e15
 
+
 # reshape
 nfix <- gather(nfix_MT, "season", "nfix_total")
 nfix_total_MT <- sum(nfix$nfix_total)
@@ -61,8 +62,8 @@ p2 <- ggplot(nfix, aes(x=season, y=nfix_total)) +
 ggsave(p2, file="nfix_total.png", width = 6)
 
 #calculate total N for central GBR
-central_gbr = readRDS(file = "gbr_central.rds")
-summer_central <- summer[inout(summer[, 2:1], central_gbr, bound=TRUE), ] 
+central_gbr = readRDS(file = "gbr_central.rds") #read Central GBR boundary data
+summer_central <- summer[inout(summer[, 2:1], central_gbr, bound=TRUE), ] #select GBR4 geolocations that are in the CentralGBR boundary
 autumn_central <- autumn[inout(autumn[, 2:1], central_gbr, bound=TRUE), ]
 winter_central <- winter[inout(winter[, 2:1], central_gbr, bound=TRUE), ] 
 spring_central <- spring[inout(spring[, 2:1], central_gbr, bound=TRUE), ] 
@@ -75,6 +76,30 @@ p_cent <- ggplot(nfix.central, aes(x=season, y=nfix_total)) +
 ggsave(p_cent, file="nfix_total_central.png", width = 6)
 
 
+#combined central GBR and GBR N fixation plot
+n_sum = data.frame(Season = 'summer', nfix_total = sum(summer$nfix_total)* 86400 / 1e15, Region = "GBR")
+n_aut = data.frame(Season = 'autumn', nfix_total = sum(autumn$nfix_total)* 86400 / 1e15, Region = "GBR") 
+n_win = data.frame(Season = 'winter', nfix_total = sum(winter$nfix_total)* 86400 / 1e15, Region = "GBR")
+n_spr = data.frame(Season = 'spring', nfix_total = sum(spring$nfix_total)* 86400 / 1e15, Region = "GBR") 
+n_all = rbind(n_sum,n_aut,n_win,n_spr)
+n_sum_cen = data.frame(Season = 'summer', nfix_total = sum(summer_central$nfix_total)* 86400 / 1e15, Region = "Central GBR")
+n_aut_cen = data.frame(Season = 'autumn', nfix_total = sum(autumn_central$nfix_total)* 86400 / 1e15, Region = "Central GBR") 
+n_win_cen = data.frame(Season = 'winter', nfix_total = sum(winter_central$nfix_total)* 86400 / 1e15, Region = "Central GBR")
+n_spr_cen = data.frame(Season = 'spring', nfix_total = sum(spring_central$nfix_total)* 86400 / 1e15, Region = "Central GBR") 
+n_all_cen = rbind(n_sum_cen,n_aut_cen,n_win_cen,n_spr_cen)
+
+nfix_total_gbr <- rbind(n_all,n_all_cen)
+p_cent <- ggplot(nfix_total_gbr, aes(fill=Region, y=nfix_total, x=Season)) +
+  geom_bar(position='dodge', stat='identity') +
+  xlab('Season') + 
+  ylab('Total load of nitrogen from nitrogen fixation (MT)') +  theme_bw() + 
+  theme(axis.line = element_line(colour = "black"),
+        legend.title=element_text(size=14),
+        axis.text=element_text(size=16),
+        axis.title=element_text(size=16),
+        legend.text=element_text(size=12),
+        panel.background = element_blank())
+ggsave(p_cent, file="nfix_all.png", width = 8)
 
 
 # select cross-shelf waterbodies
@@ -102,9 +127,7 @@ winter_inshelf <- winter_inshelf[!inout(winter_inshelf[,2:1],winter_midshelf[2:1
 winter_midshelf <- winter_midshelf[!inout(winter_midshelf[,2:1],winter_outshelf[2:1],bound=TRUE),]
 
 
-
-
-#Cross-shelf waterbodies' fixed N in kilotonnes
+#Calculate cross-shelf waterbodies' fixed N in kilotonnes
 nfix_summer1 <- data.frame(season = 'summer', shelf = 'inner-shelf', nfix_total =sum(summer_inshelf$nfix_total) * 86400 / 1e12)
 nfix_summer2 <- data.frame(season = 'summer', shelf = 'mid-shelf', nfix_total =sum(summer_midshelf$nfix_total) * 86400 / 1e12)
 nfix_summer3 <- data.frame(season = 'summer', shelf = 'outer-shelf', nfix_total =sum(summer_outshelf$nfix_total) * 86400 / 1e12)
@@ -143,7 +166,7 @@ p3 <- ggplot(nfix_all, aes(fill=shelf, y=nfix_total, x=season)) +
                                                                        panel.background = element_blank())  
 ggsave(p3, file="nfix_shelf.png")
 
-#Cross-shelf waterbodies' fixed N in kg/m^2
+#Calculate cross-shelf waterbodies' fixed N in kg/m^2
 nfix_summer1a <- data.frame(season = 'summer', shelf = 'inner-shelf', nfix_total =sum(summer_inshelf$nfix_total)/ sum(summer_inshelf$area) * 86400/1e6)
 nfix_summer2a <- data.frame(season = 'summer', shelf = 'mid-shelf', nfix_total =sum(summer_midshelf$nfix_total)/ sum(summer_midshelf$area) * 86400/1e6)
 nfix_summer3a <- data.frame(season = 'summer', shelf = 'outer-shelf', nfix_total =sum(summer_outshelf$nfix_total)/ sum(summer_outshelf$area) * 86400/1e6)
@@ -184,12 +207,17 @@ p4 <- ggplot(nfix_all_area, aes(fill=shelf, y=nfix_total, x=season)) +
 ggsave(p4, file="nfix_shelf_area.png")
 
 
+slice_x = c(148.5,150.5)
+slice_y = c(-20,-20)
+slice = data.frame(long= slice_x, lat=slice_y) #transect on cross-shelf waters
 
 #create GBR cross-shelf image
-p5 = ggplot() + geom_point(spring_inshelf, mapping = aes(x = longitude, y=latitude, colour = 'inner-shelf')) +
+p5 = ggplot() + geom_path(data = map.df, aes(x = long,y = lat), size=1, color = "grey") +
+                geom_point(spring_inshelf, mapping = aes(x = longitude, y=latitude, colour = 'inner-shelf')) +
                 geom_point(spring_midshelf, mapping=aes(x = longitude, y=latitude, colour= "mid-shelf")) +
                 geom_point(spring_outshelf, mapping = aes(x = longitude, y=latitude, colour= "outer-shelf")) + 
-                geom_path(data = map.df, aes(x = long,y = lat), size=1, color = "grey") + coord_map() +
+                geom_path(data = slice, aes(x = long,y = lat), size=1.5, color = "black") +
+                coord_map() +
                 theme_bw() + theme(panel.background = element_blank(),
                                    panel.grid.major = element_blank(), 
                                    panel.grid.minor = element_blank(),
@@ -208,9 +236,6 @@ p5
 ggsave(p5, file="gbr_shelf.png")
 
 
-p <- ggplot(dat, aes(x = long, y=lat)) + geom_point(colour="green") + geom_polygon(data = map.df, fill = "blue") +
-     geom_polygon(data = central_gbr, fill = "orange") + coord_map() + theme_bw() + 
-     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-print(p)
+
 
 
