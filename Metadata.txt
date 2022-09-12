@@ -1,0 +1,43 @@
+﻿This readme file was generated on 7/09/2022 by Chinenye J. Ani
+
+GENERAL INFORMATION
+
+Title of Dataset: Simulated CSIRO Environmental Modelling Suite (EMS) output in netCDF format (out_simple.nc)
+Author/Principal Investigator Information
+Name: Dr Barbara Robson
+Institution: Australian Institute of Marine Science (AIMS)
+Email: b.robson@aims.gov.au
+
+Author/Co-investigator Information
+Name: Chinenye J. Ani
+Institution: James Cook University and Australian Institute of Marine Science
+Email: chinenye.ani@my.jcu.edu.au
+
+Date of data collection: 2022-02-17  
+
+Information about funding sources that supported the collection of the data: AIMS@JCU PhD Scholarship; 
+                                                                             Queensland Water Modelling Network Innovation Associate Program
+
+METHODOLOGICAL INFORMATION
+
+Description of methods used for collection/generation of data: Linux operating system, C compiler and NETCDF library were used to build the modified EMS applications on AIMS HPC. The EMS version used is 1.2.1.
+                                                               The modified EMS was derived from the eReefs model (https://ereefs.org.au/ereefs) and the model descriptions are found in Baird et al.(2020). 
+                                                               
+Methods for processing the data: Hydrodynamic model forcing available in https://research.csiro.au/ereefs/models/models-about/models-hydrodynamics/
+                                 Biogeochemical (BGC) model forcing: Simulated hydrodynamic model output; 
+                                                                     Regional wave model data;
+                                                                     2019 catchment conditions of nutrient and sediment loads available in https://svnserv.csiro.au/svn/CEM/projects/eReefs/model/gbr4_bgc_hindcast/gbr4_H2p0_B3p2_Cb/
+                                 Initialisation file: GBR4 BGC 3p1 initialisation data
+                                 The 4km resolution grid of the EMS was run on AIMS HPC from 1/12/2010 to 30/11/2012
+
+Software-specific information needed to interpret the data: R Software version 3.5.1;  
+                                                            GNU Compiler Collection (GCC) version 6.1.0;
+                                                            network Common Data Form (NetCDF-cxx) version 4.2.1; 
+                                                            Open Message Passing Interface (OpenMPI-gcc) version 1.10.2; 
+                                                            NetCDF Operators (NCO) version 4.5.5  
+
+R scripts for post-processing simulated data are available in https://github.com/Chinenyeani1986/Trichodesmium-N-budget
+
+People involved with data collection, processing, analysis and/or submission: Chinenye J. Ani and Dr Barbara Robson
+
+
