@@ -12,4 +12,8 @@ gbrmp_depth_extraction.R is used to extract depth-integrated Trichodesmium N and
 
 gam_depth.R and gam_nfix_depth.R are used to analyse emergent patterns of simulated eReefs data.
 
+mean_variables.R is used to visulise spatially resolved variables
+
+verticle_slice.R is used to extract and visualise the vertical distribution of Trichodesmium along a transect of the GBR cross-shelf waters.
+
 The simulated eReefs datasets can be obtained upon request.  
