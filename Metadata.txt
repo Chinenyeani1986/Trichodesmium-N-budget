@@ -15,13 +15,15 @@ Email: chinenye.ani@my.jcu.edu.au
 
 Date of data collection: 2022-02-17  
 
+Data location: AIMS PEARL (\\pearl\rwqpp\eReefs_model_results\out_simple.nc)
+
 Information about funding sources that supported the collection of the data: AIMS@JCU PhD Scholarship; 
                                                                              Queensland Water Modelling Network Innovation Associate Program
 
 METHODOLOGICAL INFORMATION
 
 Description of methods used for collection/generation of data: Linux operating system, C compiler and NETCDF library were used to build the modified EMS applications on AIMS HPC. The EMS version used is 1.2.1.
-                                                               The modified EMS was derived from the eReefs model (https://ereefs.org.au/ereefs) and the model descriptions are found in Baird et al.(2020). 
+                                                               The modified EMS was derived from the eReefs model (https://ereefs.org.au/ereefs) and the model descriptions are found in Baird et al. (2020). 
                                                                
 Methods for processing the data: Hydrodynamic model forcing available in https://research.csiro.au/ereefs/models/models-about/models-hydrodynamics/
                                  Biogeochemical (BGC) model forcing: Simulated hydrodynamic model output; 
